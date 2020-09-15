@@ -59,11 +59,35 @@ class Calculator {
         this.previousOperand = '';
     }
 
-    updateDisplay() {
-        this.currentOperandTextElement.innerText = this.currentOperand;
-        this.previousOperandTextElement.innerText = this.previousOperand;
+    formatNumber(number) {
+        const numberString = number.toString();
+        const integerDigits = parseFloat(numberString.split('.')[0]);
+        const decimalDigits = numberString.split('.')[1];
+
+        let integerDisplay;  // used to display integers in Locale String format
+        if (isNaN(integerDigits)) {
+            integerDisplay = '';
+        } else {
+            integerDisplay = integerDigits.toLocaleString('en', {
+                maximumFractionDigits: 0
+            })
+        }
+        if (decimalDigits != null) {
+            return `${integerDisplay}.${decimalDigits}`;
+        } else {
+            return integerDisplay;
+        }
     }
-}
+
+    updateDisplay() {
+        this.currentOperandTextElement.innerText = this.formatNumber(this.currentOperand);
+        if (this.operation != null) {
+            this.previousOperandTextElement.innerText = `${this.formatNumber(this.previousOperand)} ${this.operation}`
+        } else {
+            this.previousOperandTextElement.innerText = '';
+        }
+    }
+} // end of class definition
 
 
 const numberButtons = document.querySelectorAll('[data-number]');
